@@ -1,0 +1,13 @@
+.box {
+    width: 100px;
+    height: 100px;
+    font-size: 36px;
+    text-align: center;
+    border: 2px solid #333;
+    cursor: pointer;
+    background-color: #fff;
+  }
+  
+  .box:hover {
+    background-color: #f0f0f0;
+  }
