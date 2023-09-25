@@ -1,7 +1,8 @@
 import { useState } from "react";
 // import Box from "./Box.js";
 import "./TicTacToe.css";
-
+import Box from "./Box";
+import RestartButton from "./RestartButton";
 
 export const TicTacToe = () => {
   const [Board, setBoard] = useState(Array(9).fill(""));
@@ -15,23 +16,38 @@ export const TicTacToe = () => {
     newBoard[index] = XIsNExt ? "X" : "O";
     setBoard(newBoard);
     setXIsNExt(!XIsNExt);
+
+    const winner = calculateWinner(newBoard);
+    if (winner || newBoard.every((Box) => Box)) {
+      setGameOver(true);
+    } else {
+      setGameOver(false);
+    }
   };
 
   const renderBox = (index) => (
-    <td className="Box" onClick={() => clickHandle(index)}>{Board[index]}</td>
+    <td className="Box" onClick={() => clickHandle(index)}>
+      {Board[index]}
+    </td>
     // <Box value={Board[index]} onClick={() => clickHandle(index)} />
   );
 
   const winner = calculateWinner(Board);
   let status;
 
-  if(winner){
-    status = `${winner} is the winner!`
-  }else if(Board.every((Box) => Box)){
-    status = "It's a draw!"
-  }else{
-    status = `Next player : ${XIsNExt ?  "X" : "O"}`
+  if (winner) {
+    status = `${winner} is the winner!`;
+  } else if (Board.every((Box) => Box)) {
+    status = "It's a draw!";
+  } else {
+    status = `Next player : ${XIsNExt ? "X" : "O"}`;
   }
+
+  const restartGame = () => {
+    setBoard(Array(9).fill(""))
+    setXIsNExt(true);
+    setGameOver(false)
+  };
 
   return (
     <div className="tictactoe">
@@ -55,30 +71,33 @@ export const TicTacToe = () => {
           </tr>
         </tbody>
       </table>
+      {GameOver && (
+        <RestartButton onClick={restartGame} />
+      )}
     </div>
   );
 };
 
-function calculateWinner(Board){
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
+function calculateWinner(Board) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
-    for(let i=0; i<lines.length; i++){
-        const[a, b, c] = lines[i];
-        if(Board[a] && Board[a] === Board[b] && Board[a] === Board[c]){
-            return Board[a];
-        }
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (Board[a] && Board[a] === Board[b] && Board[a] === Board[c]) {
+      return Board[a];
     }
+  }
 
-    return null; //if no winner empty
+  return null; //if no winner empty
 }
 
 export default TicTacToe;
