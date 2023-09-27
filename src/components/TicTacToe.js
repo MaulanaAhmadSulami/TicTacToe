@@ -1,13 +1,14 @@
 import { useState } from "react";
-// import Box from "./Box.js";
 import "./TicTacToe.css";
-import Box from "./Box";
 import RestartButton from "./RestartButton";
+import AudioPlay from "./AudioPlay";
+import Pizzicato from "../audio/Pizzicato.mp3";
 
 export const TicTacToe = () => {
   const [Board, setBoard] = useState(Array(9).fill(""));
   const [XIsNExt, setXIsNExt] = useState(true);
   const [GameOver, setGameOver] = useState(false);
+  const [audioStarted, setaudioStarted] = useState(false);
 
   const clickHandle = (index) => {
     if (Board[index] || calculateWinner(Board)) return;
@@ -24,6 +25,10 @@ export const TicTacToe = () => {
       setGameOver(false);
     }
   };
+
+  if(!audioStarted){
+    setaudioStarted(true)
+  }
 
   const renderBox = (index) => (
     <td className="Box" onClick={() => clickHandle(index)}>
@@ -44,9 +49,9 @@ export const TicTacToe = () => {
   }
 
   const restartGame = () => {
-    setBoard(Array(9).fill(""))
+    setBoard(Array(9).fill(""));
     setXIsNExt(true);
-    setGameOver(false)
+    setGameOver(false);
   };
 
   return (
@@ -71,9 +76,11 @@ export const TicTacToe = () => {
           </tr>
         </tbody>
       </table>
-      {GameOver && (
-        <RestartButton onClick={restartGame} />
+      {GameOver && <RestartButton onClick={restartGame} />}
+      {!audioStarted && (
+        <button onClick={() => setaudioStarted(true)}>Start</button> 
       )}
+      {audioStarted && <AudioPlay audioSrc={Pizzicato} />}
     </div>
   );
 };
